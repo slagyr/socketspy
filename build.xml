@@ -1,0 +1,75 @@
+<project name="Socket Spy" default="jar" basedir=".">
+    <description>
+        Socket Spy - A simple Socket sniffer.
+    </description>
+
+    <property name="src" location="src"/>
+    <property name="classes" location="classes"/>
+    <property name="lib" location="lib"/>
+    <property name="jarfile" location="socketSpy.jar"/>
+
+
+    <path id="classpath">
+        <pathelement path="${classes}"/>
+        <fileset dir="${lib}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="build" depends="clean, compile" description="clean, then compile the source"/>
+
+    <target name="testbuild" depends="clean, unit_test"
+            description="Run this target any time you change code or acceptance tests. It will clean, then compile the source, run all the unit test and fintesse acceptance tests."/>
+
+    <target name="jar" depends="build" description="generate the jar file">
+        <delete file="${jarfile}"/>
+
+        <unzip dest="${classes}">
+            <patternset>
+                <exclude name="**/META-INF/**/*"/>
+            </patternset>
+            <fileset dir="lib">
+                <include name="**/*.jar"/>
+                <exclude name="**/junit*.jar"/>
+            </fileset>
+        </unzip>
+
+        <jar jarfile="${jarfile}" basedir="${classes}">
+            <include name="**/*"/>
+            <exclude name="**/*Test.class"/>
+            <manifest>
+                <attribute name="Built-By" value="Micah Martin"/>
+                <attribute name="Main-Class" value="SocketSpy"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="compile" depends="init" description="compile the source (make)">
+        <javac srcdir="${src}" destdir="${classes}" classpathref="classpath" debug="true"/>
+    </target>
+
+    <target name="clean" description="delete everything in the classes directory">
+        <mkdir dir="${classes}"/>
+        <delete includeemptydirs="true">
+            <fileset dir="${classes}" includes="**/"/>
+        </delete>
+    </target>
+
+    <target name="unit_test" depends="compile" description="run the unit tests">
+        <junit fork="yes" printsummary="on" haltonfailure="yes" haltonerror="yes">
+            <classpath refid="classpath"/>
+            <!--<formatter type="xml" usefile="false" />-->
+            <formatter type="brief" usefile="false"/>
+            <batchtest fork="no" todir="etc/test_reports">
+                <fileset dir="${src}">
+                    <include name="**/*Test.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
+    <target name="init">
+        <mkdir dir="${classes}"/>
+    </target>
+
+</project>

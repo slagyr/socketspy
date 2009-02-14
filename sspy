@@ -1,0 +1,8 @@
+#!/bin/sh
+
+pushd /Users/micahmartin/Projects/socketSpy
+
+java -cp classes:lib/fitnesse.jar SocketSpy $1 $2
+
+popd
+
