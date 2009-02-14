@@ -71,14 +71,14 @@ public class SocketSpyTest extends TestCase
 
 	public void testDestinationHost() throws Exception
 	{
-		assertEquals(InetAddress.getLocalHost(), spy.destinationHost);
+		assertEquals(InetAddress.getByName("localhost"), spy.destinationHost);
 		spy = new SocketSpy(9991, 9992, InetAddress.getByName("google.com"));
 		assertEquals(InetAddress.getByName("google.com"), spy.destinationHost);
 	}
 
 	private void makeConnection() throws IOException
 	{
-		Socket originSocket = new Socket(Inet4Address.getLocalHost(), 9991);
+		Socket originSocket = new Socket(Inet4Address.getByName("localhost"), 9991);
 		originInput = originSocket.getInputStream();
 		originOutput = originSocket.getOutputStream();
 	}

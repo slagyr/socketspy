@@ -17,7 +17,7 @@ public class SocketSpy implements SocketServer
 
 	public SocketSpy(int listenPort, int talkPort) throws UnknownHostException
   {
-		this(listenPort, talkPort, InetAddress.getLocalHost());
+		this(listenPort, talkPort, InetAddress.getByName("localhost"));
 	}
 
 	public SocketSpy(int listenPort, int talkPort, InetAddress destinationHost)
@@ -44,7 +44,7 @@ public class SocketSpy implements SocketServer
 
 	public void spy() throws Exception
 	{
-		service = new SocketService(originPort, this);
+		service = new SocketService(originPort, this, InetAddress.getByName("localhost"));
 	}
 
 	public void stop() throws Exception
